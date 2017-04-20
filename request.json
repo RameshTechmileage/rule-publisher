@@ -1,0 +1,129 @@
+{
+    "rules": {
+        "behaviors": [
+           {
+				"name": "origin",
+				"options": {
+					"originType": "CUSTOMER",
+					"hostname": "origin-cdn.nxgdata.com",
+					"forwardHostHeader": "REQUEST_HOST_HEADER",
+					"cacheKeyHostname": "ORIGIN_HOSTNAME",
+					"compress": true,
+					"enableTrueClientIp": false,
+					"httpPort": 80
+				},
+				"uuid": "01939589-b31f-4a49-af13-d834ed8237f2"
+			}, {
+				"name": "cpCode",
+				"options": {
+					"value": {
+						"id": 494323
+					}
+				},
+				"uuid": "86e11569-93bf-4674-ba27-2234adc1db4d"
+			}, {
+				"name": "caching",
+				"options": {
+					"behavior": "NO_STORE"
+				},
+				"uuid": "3eb1271b-28e3-4feb-9f0b-24936ff5d76b"
+			}, {
+				"name": "allowPost",
+				"options": {
+					"enabled": true,
+					"allowWithoutContentLength": false
+				},
+				"uuid": "93ba072e-b300-4bef-9dee-f246678cc06a"
+			}, {
+				"name": "report",
+				"options": {
+					"logHost": false,
+					"logReferer": false,
+					"logUserAgent": true,
+					"logAcceptLanguage": false,
+					"logCookies": "OFF"
+				},
+				"uuid": "cb264ebe-0bb5-409a-8c55-97b867f8dad0"
+			}
+        ],
+        "uuid": "default",
+        "comments": "",
+        "children": [{
+				"name": "Content Compression",
+				"uuid": "bb0091c8-4c01-42c5-ba17-85485b23f59d",
+				"behaviors": [{
+					"name": "gzipResponse",
+					"options": {
+						"behavior": "ALWAYS"
+					},
+					"uuid": "9a2a4552-d6b7-47f1-927e-70611c2b8575"
+				}],
+				"children": [],
+				"criteria": [{
+					"name": "contentType",
+					"options": {
+						"matchOperator": "IS_ONE_OF",
+						"values": ["text/html*", "text/css*", "application/x-javascript*"],
+						"matchWildcard": true,
+						"matchCaseSensitive": false
+					},
+					"uuid": "fecf5d42-7505-495d-bdbc-2556737d1c50"
+				}],
+				"criteriaMustSatisfy": "all",
+				"comments": ""
+			}, {
+				"name": "Testing rule match on query param",
+				"uuid": "81f8b4f3-eac8-4eb6-8490-95f431c8b60c",
+				"behaviors": [{
+					"name": "rewriteUrl",
+					"options": {
+						"behavior": "REWRITE",
+						"targetUrl": "/amex_learn_more.json"
+					},
+					"uuid": "b67e34e8-9497-46dd-8d7f-e51c499eb00b"
+				}, {
+					"name": "caching",
+					"options": {
+						"behavior": "MAX_AGE",
+						"mustRevalidate": false,
+						"ttl": "3h"
+					},
+					"uuid": "d5f5760b-3b9d-48e3-ad10-194071c2e6d1"
+				}],
+				"children": [],
+				"criteria": [{
+					"name": "queryStringParameter",
+					"options": {
+						"parameterName": "pagetype",
+						"matchOperator": "IS_ONE_OF",
+						"values": ["learnmore"],
+						"matchWildcardName": false,
+						"matchCaseSensitiveName": true,
+						"matchWildcardValue": false,
+						"matchCaseSensitiveValue": true,
+						"escapeValue": false
+					},
+					"uuid": "5eb423b4-51ce-4669-8706-5be3092e4c4f"
+				}, {
+					"name": "queryStringParameter",
+					"options": {
+						"parameterName": "solution",
+						"matchOperator": "IS_ONE_OF",
+						"values": ["cardapplication"],
+						"matchWildcardName": false,
+						"matchCaseSensitiveName": true,
+						"matchWildcardValue": false,
+						"matchCaseSensitiveValue": true,
+						"escapeValue": false
+					},
+					"uuid": "26c08884-d8f0-47ae-83f5-4e3f7ca46124"
+				}],
+				"criteriaMustSatisfy": "all",
+				"comments": ""
+			}],
+        "options": {
+            "is_secure": true
+        },
+        "name": "default"
+    }
+}

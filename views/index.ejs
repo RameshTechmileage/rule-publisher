@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html ng-app="app">
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel='stylesheet' href='/lib/loading-bar.min.css' type='text/css' media='all' />
+  </head>
+  <body>
+    <h1><%= title %></h1>
+    <ng-view></ng-view>
+    <script src="js/angular.js"></script>
+    <script src="js/angular-route.js"></script>
+    <script src="js/angular-resource.js"></script>
+    <script src="js/toArrayFilter.js"></script>
+    <script type='text/javascript' src='/lib/loading-bar.min.js'></script>
+    <script src="js/app.js"></script>
+    <!-- Template -->
+    <script type="text/ng-template" id="/groups.html">
+      Search: <input type="text" ng-model="search.groupName">
+      <ul>
+        <li ng-repeat="group in groups | toArray:false | filter:search">
+          {{group.groupName}}
+          <ul>
+            <li ng-repeat="contract in group.contractIds">
+              <a href="#/properties/?group={{group.groupId}}&contract={{contract}}">{{contract}}</a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </script>
+    <script type="text/ng-template" id="/properties.html">
+      Search: <input type="text" ng-model="search.propertyName">
+      <table>
+        <tr>
+          <th>Name</th>
+          <th>Latest Version</th>
+          <th>Staging Version</th>
+          <th>Production Version</th>
+        </tr>
+        <tr ng-repeat="property in properties | toArray:false | filter:search">
+          <td>{{property.propertyName}}</td>
+          <td><a href="#/propertyRules/?group={{property.groupId}}&contract={{property.contractId}}&propertyId={{property.propertyId}}&propertyVersion={{property.latestVersion}}">{{property.latestVersion}}</a></td>
+          <td><a href="#/propertyRules/?group={{property.groupId}}&contract={{property.contractId}}&propertyId={{property.propertyId}}&propertyVersion={{property.stagingVersion}}">{{property.stagingVersion}}</a></td>
+          <td><a href="#/propertyRules/?group={{property.groupId}}&contract={{property.contractId}}&propertyId={{property.propertyId}}&propertyVersion={{property.productionVersion}}">{{property.productionVersion}}</a></td>
+        </tr>
+      </table>
+    </script>
+    <script type="text/ng-template" id="/propertyRules.html">
+    <h1>Behaviors</h1>
+      <button ng-click="save()">Save Changes</button>
+      <table>
+        <tr>
+          <th>Name</th>
+          <th>Options</th>
+        </tr>
+        <tr ng-repeat="behavior in propertyRules.behaviors">
+          <td>{{behavior.name}}</td>
+          <td>
+            <ul ng-repeat="(key, val) in behavior.options">
+              <li ng-switch on="typeOf(val)">
+                  <span ng-switch-when="object">
+                    <span><strong>{{key}}</strong>:</span>
+                      <ul ng-repeat="(key2, val2) in val">
+                        <li><strong>{{key2}}</strong>: {{val2}}</li>
+                      </ul>
+                  </span>
+                  <span ng-switch-default>
+                    <span><strong>{{key}}</strong>: {{val}}</span>
+                    <select name="{{key}}" ng-if="behavior.selectOptions && behavior.selectOptions[key]" ng-model="behavior.options[key]" ng-options="v for v in behavior.selectOptions[key]">
+                    </select>
+                  </span>
+              </li>
+
+            </ul>
+          </td>
+        </tr>
+      </table>
+    </script>
+
+</body>
+</html>
